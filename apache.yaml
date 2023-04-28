@@ -2,7 +2,6 @@
   - name: apache installation
     hosts: all
     become: yes
-    become-user: root
     tasks:
       - name: httpd installed
         ansible.builtin.yum:
