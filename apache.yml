@@ -2,7 +2,6 @@
   - name: apache installation
     hosts: all
     become: true
-    become_method: sudo
     gather_facts: False
     tasks:
       - name: httpd installed
