@@ -1,7 +1,6 @@
 ---
   - name: apache installation
     hosts: all
-    become: yes
     gather_facts: no
     tasks:
       - name: httpd installed
