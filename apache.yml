@@ -1,7 +1,7 @@
 ---
   - name: apache installation
     hosts: all
-    become: yes
+    become: true
     tasks:
       - name: httpd installed
         ansible.builtin.yum:
