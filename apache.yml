@@ -1,21 +1,20 @@
 ---
-  - name: apache installation
-    hosts: all
-    become: true
-    become_user: root
-    gather_facts: no
-    tasks:
-      - name: httpd installed
-        ansible.builtin.yum:
-            name: httpd
-            state: latest
-      - name: custom index.html
-        ansible.builtin.copy:
-            dest: /var/www/html/index.html
-            content: |
-                        Custom Web Page
-      - name: httpd service enabled
-        ansible.builtin.service:
-            name: httpd
-            enabled: true
-            state: started
+- name: setup webserver
+  hosts: all
+  become: true
+  become_user: root
+  tasks:
+    - name: httpd installed
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+    - name: custom index.html
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: |
+                    Custom Web Page
+    - name: httpd service enabled
+      ansible.builtin.service:
+        name: httpd
+        enabled: true
+        state: started
