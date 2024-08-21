@@ -20,6 +20,11 @@
         state: started
         enabled: yes
 
+    - name: Install pexpect library
+      yum:
+        name: python3-pexpect
+        state: present        
+
     - name: Secure MySQL installation (Set root password)
       expect:
         command: mysql_secure_installation
