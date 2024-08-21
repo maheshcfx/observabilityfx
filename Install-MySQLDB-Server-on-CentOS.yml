@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL DB Server on CentOS 8 Stream
-  hosts: centos8
+  hosts: all
   become: yes
 
   tasks:
