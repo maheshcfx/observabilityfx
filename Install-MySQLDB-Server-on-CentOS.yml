@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL DB Server on CentOS 8 Stream
-  hosts: all
+  hosts: centos8
   become: yes
 
   tasks:
@@ -25,13 +25,13 @@
         command: mysql_secure_installation
         responses:
           "Enter password for user root:": ""
-          "Set root password? \[Y/n\]": "Y"
-          "New password:": "m9Jv5fRH8UPB"
-          "Re-enter new password:": "m9Jv5fRH8UPB"
-          "Remove anonymous users? \[Y/n\]": "Y"
-          "Disallow root login remotely? \[Y/n\]": "Y"
-          "Remove test database and access to it? \[Y/n\]": "Y"
-          "Reload privilege tables now? \[Y/n\]": "Y"
+          "Set root password? [Y/n]": "Y"
+          "New password:": "Passw0rd123"
+          "Re-enter new password:": "Passw0rd123"
+          "Remove anonymous users? [Y/n]": "Y"
+          "Disallow root login remotely? [Y/n]": "Y"
+          "Remove test database and access to it? [Y/n]": "Y"
+          "Reload privilege tables now? [Y/n]": "Y"
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: Ensure MySQL is listening on the correct IP address
