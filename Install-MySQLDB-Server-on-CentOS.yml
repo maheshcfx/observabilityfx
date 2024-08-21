@@ -4,9 +4,9 @@
   become: yes
 
   tasks:
-    - name: Install MySQL repository
+    - name: Install MySQL server from AppStream
       yum:
-        name: https://dev.mysql.com/get/mysql80-community-release-el8-3.noarch.rpm
+        name: @mysql
         state: present
 
     - name: Install MySQL server
