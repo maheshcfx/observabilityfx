@@ -1,0 +1,50 @@
+---
+- name: Install MySQL DB Server on CentOS 8 Stream
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install MySQL repository
+      yum:
+        name: https://dev.mysql.com/get/mysql80-community-release-el8-3.noarch.rpm
+        state: present
+
+    - name: Install MySQL server
+      yum:
+        name: mysql-server
+        state: present
+
+    - name: Start MySQL service
+      service:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Secure MySQL installation (Set root password)
+      expect:
+        command: mysql_secure_installation
+        responses:
+          "Enter password for user root:": ""
+          "Set root password? \[Y/n\]": "Y"
+          "New password:": "m9Jv5fRH8UPB"
+          "Re-enter new password:": "m9Jv5fRH8UPB"
+          "Remove anonymous users? \[Y/n\]": "Y"
+          "Disallow root login remotely? \[Y/n\]": "Y"
+          "Remove test database and access to it? \[Y/n\]": "Y"
+          "Reload privilege tables now? \[Y/n\]": "Y"
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Ensure MySQL is listening on the correct IP address
+      lineinfile:
+        path: /etc/my.cnf
+        regexp: '^bind-address'
+        line: 'bind-address = 0.0.0.0'
+        state: present
+      notify: Restart MySQL
+
+  handlers:
+    - name: Restart MySQL
+      service:
+        name: mysqld
+        state: restarted
+

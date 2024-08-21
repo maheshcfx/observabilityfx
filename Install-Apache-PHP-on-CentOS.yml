@@ -1,0 +1,38 @@
+---
+- name: Install Apache and PHP on CentOS 8 Stream
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure Apache is installed
+      yum:
+        name: httpd
+        state: present
+
+    - name: Ensure Apache is started and enabled
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Install PHP and required modules
+      yum:
+        name:
+          - php
+          - php-cli
+          - php-common
+          - php-fpm
+          - php-mysqlnd
+        state: present
+
+    - name: Ensure PHP-FPM is started and enabled
+      systemd:
+        name: php-fpm
+        state: started
+        enabled: yes
+
+    - name: Ensure Apache is restarted to load PHP modules
+      systemd:
+        name: httpd
+        state: restarted
+
