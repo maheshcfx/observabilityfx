@@ -37,6 +37,8 @@
           "Disallow root login remotely? [Y/n]": "Y"
           "Remove test database and access to it? [Y/n]": "Y"
           "Reload privilege tables now? [Y/n]": "Y"
+          "Press y|Y for Yes, any other key for No:": "n"  # Adjust based on your requirement
+        timeout: 90  # Increase this if necessary          
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: Ensure MySQL is listening on the correct IP address
