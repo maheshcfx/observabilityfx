@@ -6,7 +6,7 @@
   tasks:
     - name: Install MySQL server from AppStream
       yum:
-        name: @mysql
+        name: mysql
         state: present
 
     - name: Install MySQL server
