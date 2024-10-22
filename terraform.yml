@@ -1,0 +1,22 @@
+---
+- name: Run Terraform on a remote server
+  hosts: all
+  become: true
+
+  vars:
+    terraform_version: "1.9.8"  # Set your desired version of Terraform
+    terraform_dir: "/root/tf-aws"  # Directory on the remote server for Terraform
+
+  tasks:
+
+    # 1. Initialize Terraform
+    - name: Initialize Terraform
+      command: terraform init
+      args:
+        chdir: "{{ terraform_dir }}"
+
+    # 2. Apply Terraform configuration
+    - name: Apply Terraform configuration
+      command: terraform apply -auto-approve
+      args:
+        chdir: "{{ terraform_dir }}"
