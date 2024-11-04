@@ -1,6 +1,6 @@
 ---
 - name: Install LAMP Stack on Ubuntu 18.04
-  hosts: all
+  hosts: webserver
   become: yes
   vars:
     mysql_root_password: "xbt9UX8zykKd2qarG6A4cH"
@@ -11,28 +11,33 @@
         update_cache: yes
         upgrade: yes
         cache_valid_time: 3600
+      become: yes	
 
     - name: Install Apache
       apt:
         name: apache2
         state: present
+      become: yes	
 
     - name: Ensure Apache is running and enabled on boot
       service:
         name: apache2
         state: started
         enabled: yes
+      become: yes	
 
     - name: Install MySQL Server
       apt:
         name: mysql-server
         state: present
+      become: yes
 
     - name: Ensure MySQL is running and enabled on boot
       service:
         name: mysql
         state: started
         enabled: yes
+      become: yes	
 
     - name: Secure MySQL Installation
       expect:
@@ -46,6 +51,7 @@
           "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :": "y"
           "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :": "y"
       when: mysql_root_password != ""
+      become: yes
 
     - name: Install PHP and required extensions
       apt:
@@ -61,15 +67,18 @@
           - php-xml
           - php-zip
         state: present
+      become: yes	
 
     - name: Restart Apache to apply PHP configuration
       service:
         name: apache2
         state: restarted
+      become: yes	
 
     - name: Create a PHP info file
       copy:
         dest: /var/www/html/info.php
         content: "<?php phpinfo(); ?>"
         mode: '0644'
+      become: yes	
 
