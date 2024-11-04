@@ -1,6 +1,6 @@
 ---
 - name: Install LAMP Stack on Ubuntu 18.04
-  hosts: webserver
+  hosts: all
   become: yes
   vars:
     mysql_root_password: "xbt9UX8zykKd2qarG6A4cH"
