@@ -11,7 +11,11 @@
         update_cache: yes
         upgrade: yes
         cache_valid_time: 3600
-      become: yes	
+      become: yes
+      retries: 3
+      delay: 10
+      register: apt_update
+      until: apt_update is succeeded      
 
     - name: Install Apache
       apt:
