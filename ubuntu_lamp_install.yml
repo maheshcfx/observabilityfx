@@ -2,6 +2,8 @@
 - name: Install LAMP Stack on Ubuntu 18.04
   hosts: webserver
   become: yes
+  vars:
+    mysql_root_password: "xbt9UX8zykKd2qarG6A4cH"
   tasks:
 
     - name: Update and upgrade apt packages
@@ -33,15 +35,17 @@
         enabled: yes
 
     - name: Secure MySQL Installation
-      mysql_secure_installation:
-        login_user: root
-        login_password: ""
-        new_password: "your_password_here"
-        password_auth: yes
-        remove_anonymous_user: yes
-        disallow_root_login_remotely: yes
-        remove_test_db: yes
-        state: present
+      expect:
+        command: "/usr/bin/mysql_secure_installation"
+        responses:
+          "Enter password for user root:": ""
+          "New password:": "{{ mysql_root_password }}"
+          "Re-enter new password:": "{{ mysql_root_password }}"
+          "Remove anonymous users? (Press y|Y for Yes, any other key for No) :": "y"
+          "Disallow root login remotely? (Press y|Y for Yes, any other key for No) :": "y"
+          "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :": "y"
+          "Reload privilege tables now? (Press y|Y for Yes, any other key for No) :": "y"
+      when: mysql_root_password != ""
 
     - name: Install PHP and required extensions
       apt:
@@ -68,10 +72,4 @@
         dest: /var/www/html/info.php
         content: "<?php phpinfo(); ?>"
         mode: '0644'
-
-    - name: Set MySQL root password environment variable
-      lineinfile:
-        dest: /root/.my.cnf
-        line: 'password=your_password_here'
-        create: yes
 
