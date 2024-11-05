@@ -50,6 +50,8 @@
           "Enter password for user root:": ""
           "New password:": "{{ mysql_root_password }}"
           "Re-enter new password:": "{{ mysql_root_password }}"
+          "VALIDATE PASSWORD PLUGIN can be used to test passwords": "n"
+          "Press y|Y for Yes, any other key for No:": "n"
           "Remove anonymous users? (Press y|Y for Yes, any other key for No) :": "y"
           "Disallow root login remotely? (Press y|Y for Yes, any other key for No) :": "y"
           "Remove test database and access to it? (Press y|Y for Yes, any other key for No) :": "y"
