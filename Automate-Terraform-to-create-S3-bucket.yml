@@ -12,7 +12,6 @@
       ansible.builtin.command:
         cmd: terraform init
         chdir: ~/terraform-aws-s3
-      notify: Apply Terraform Plan
 
     - name: Run Terraform Plan
       ansible.builtin.command:
