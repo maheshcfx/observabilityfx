@@ -1,0 +1,26 @@
+---
+- name: Automate Terraform to create S3 bucket
+  hosts: all
+  become: false
+  tasks:
+    - name: Ensure Terraform directory exists
+      ansible.builtin.file:
+        path: ~/terraform-aws-s3
+        state: directory
+
+    - name: Run Terraform Init
+      ansible.builtin.command:
+        cmd: terraform init
+        chdir: ~/terraform-aws-s3
+      notify: Apply Terraform Plan
+
+    - name: Run Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform plan -out=tfplan
+        chdir: ~/terraform-aws-s3
+
+    - name: Apply Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform apply -auto-approve tfplan
+        chdir: ~/terraform-aws-s3
+
