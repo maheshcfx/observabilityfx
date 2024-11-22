@@ -1,0 +1,10 @@
+---
+- name: Destroy Azure Resource Group with Terraform
+  hosts: all
+  become: false
+  tasks:
+    - name: Run Terraform Destroy
+      ansible.builtin.command:
+        cmd: terraform destroy -auto-approve
+        chdir: ~/terraform-azure-rg
+

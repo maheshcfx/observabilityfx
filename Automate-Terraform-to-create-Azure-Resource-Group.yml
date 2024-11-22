@@ -1,6 +1,6 @@
 ---
 - name: Automate Terraform for Azure Resource Group
-  hosts: localhost
+  hosts: all
   become: false
   tasks:
     - name: Ensure Terraform directory exists
