@@ -1,0 +1,30 @@
+---
+- name: Automate Terraform for Azure Resource Group
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Ensure Terraform directory exists
+      ansible.builtin.file:
+        path: ~/terraform-azure-rg
+        state: directory
+
+    - name: Run Terraform Init
+      ansible.builtin.command:
+        cmd: terraform init
+        chdir: ~/terraform-azure-rg
+
+    - name: Run Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform plan -out=tfplan
+        chdir: ~/terraform-azure-rg
+
+    - name: Apply Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform apply -auto-approve tfplan
+        chdir: ~/terraform-azure-rg
+
+    - name: Display Terraform Output
+      ansible.builtin.command:
+        cmd: terraform output
+        chdir: ~/terraform-azure-rg
+
