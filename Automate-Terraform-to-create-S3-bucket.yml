@@ -23,3 +23,7 @@
         cmd: terraform apply -auto-approve tfplan
         chdir: ~/terraform-aws-s3
 
+    - name: Display Terraform Output
+      ansible.builtin.command:
+        cmd: cat terraform.tfstate
+        chdir: ~/terraform-aws-s3
