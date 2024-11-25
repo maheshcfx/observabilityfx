@@ -1,7 +1,7 @@
 ---
 - name: Install Apache, PHP, and MariaDB on Amazon Linux 2
-  hosts: amazon_linux
-  become: true
+  hosts: all
+  become: false
   vars:
     mariadb_root_password: "m9Jv5fRH8UPB"  # Replace with your password or fetch securely
   tasks:
