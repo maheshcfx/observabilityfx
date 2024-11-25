@@ -13,9 +13,8 @@
         state: latest
 
     - name: Install required Python dependencies
-      pip3:
-        name: PyMySQL
-        state: present
+      shell: |
+        python3 -m pip install PyMySQL      
     
 
     # Install Apache (httpd)
