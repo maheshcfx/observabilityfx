@@ -1,0 +1,37 @@
+---
+- name: Automate Terraform for Azure Resource Group
+  hosts: all
+  become: false
+  vars:
+    terraform_directory: ~/terraform-azure-rg
+    resource_group_name: default-rg-name # Default value; can be overridden
+
+  tasks:
+    - name: Ensure Terraform directory exists
+      ansible.builtin.file:
+        path: "{{ terraform_directory }}"
+        state: directory
+
+    - name: Run Terraform Init
+      ansible.builtin.command:
+        cmd: terraform init
+        chdir: "{{ terraform_directory }}"
+
+    - name: Run Terraform Plan
+      ansible.builtin.command:
+        cmd: >
+          terraform plan 
+          -var="resource_group_name={{ resource_group_name }}" 
+          -out=tfplan
+        chdir: "{{ terraform_directory }}"
+
+    - name: Apply Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform apply -auto-approve tfplan
+        chdir: "{{ terraform_directory }}"
+
+    - name: Display Terraform Output
+      ansible.builtin.command:
+        cmd: terraform output
+        chdir: "{{ terraform_directory }}"
+
