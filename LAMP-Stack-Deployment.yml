@@ -1,0 +1,85 @@
+---
+- name: Install Apache, PHP, and MariaDB on Amazon Linux 2
+  hosts: amazon_linux
+  become: true
+  vars:
+    mariadb_root_password: "m9Jv5fRH8UPB"  # Replace with your password or fetch securely
+  tasks:
+
+    # Update the system packages
+    - name: Update all system packages
+      yum:
+        name: "*"
+        state: latest
+
+    # Install Apache (httpd)
+    - name: Install Apache web server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start and enable Apache
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    # Install PHP
+    - name: Install PHP and necessary modules
+      yum:
+        name:
+          - php
+          - php-cli
+          - php-mysqlnd
+          - php-gd
+          - php-xml
+        state: present
+
+    # Install MariaDB (MySQL)
+    - name: Install MariaDB server and client
+      yum:
+        name:
+          - mariadb-server
+          - mariadb
+        state: present
+
+    - name: Start and enable MariaDB service
+      service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    # Configure MariaDB
+    - name: Set root password and remove anonymous users
+      mysql_user:
+        login_user: root
+        login_password: ""
+        name: root
+        password: "{{ mariadb_root_password }}"
+        host_all: true
+        state: present
+
+    - name: Remove anonymous users and test database
+      shell: |
+        mysql -u root -p{{ mariadb_root_password }} -e "
+          DELETE FROM mysql.user WHERE User='';
+          DROP DATABASE IF EXISTS test;
+          FLUSH PRIVILEGES;"
+      args:
+        warn: false
+
+    # Restart services to apply changes
+    - name: Restart Apache and MariaDB to apply changes
+      service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - httpd
+        - mariadb
+
+  handlers:
+    - name: Restart MariaDB
+      service:
+        name: mariadb
+        state: restarted
+
