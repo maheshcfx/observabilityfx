@@ -1,0 +1,34 @@
+---
+- name: Automate Terraform to create S3 bucket
+  hosts: all
+  become: false
+  vars:
+    terraform_directory: "~/terraform-aws-s3"
+    s3_bucket_name: "{{ s3_bucket_name | default('default-bucket-name') }}"  # Default value if not provided
+
+  tasks:
+    - name: Ensure Terraform directory exists
+      ansible.builtin.file:
+        path: "{{ terraform_directory }}"
+        state: directory
+
+    - name: Run Terraform Init
+      ansible.builtin.command:
+        cmd: terraform init
+        chdir: "{{ terraform_directory }}"
+
+    - name: Run Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform plan -out=tfplan -var="s3_bucket_name={{ s3_bucket_name }}"
+        chdir: "{{ terraform_directory }}"
+
+    - name: Apply Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform apply -auto-approve -var="s3_bucket_name={{ s3_bucket_name }}"
+        chdir: "{{ terraform_directory }}"
+
+    - name: Display Terraform Output
+      ansible.builtin.command:
+        cmd: cat terraform.tfstate
+        chdir: "{{ terraform_directory }}"
+
