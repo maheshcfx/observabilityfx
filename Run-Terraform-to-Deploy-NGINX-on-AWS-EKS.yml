@@ -1,0 +1,35 @@
+- name: Run Terraform to Deploy NGINX on AWS EKS
+  hosts: all
+  become: false
+
+  vars:
+    region: "us-west-2"                # Default AWS region
+    eks_cluster_name: "my-eks-cluster" # Default EKS cluster name
+    terraform_directory: "~/tf-eks-deploy" # Remote directory for Terraform files
+
+  tasks:
+    - name: Initialize Terraform
+      ansible.builtin.shell: |
+        terraform init
+      args:
+        chdir: "{{ terraform_directory }}"
+
+    - name: Apply Terraform configuration
+      ansible.builtin.shell: |
+        terraform apply -auto-approve \
+          -var="region={{ region }}" \
+          -var="eks_cluster_name={{ eks_cluster_name }}"
+      args:
+        chdir: "{{ terraform_directory }}"
+
+    - name: Output NGINX LoadBalancer URL
+      ansible.builtin.shell: |
+        terraform output -raw nginx_service_load_balancer
+      args:
+        chdir: "{{ terraform_directory }}"
+      register: nginx_load_balancer_output
+
+    - name: Print NGINX LoadBalancer URL
+      ansible.builtin.debug:
+        msg: "NGINX LoadBalancer URL: {{ nginx_load_balancer_output.stdout }}"
+
