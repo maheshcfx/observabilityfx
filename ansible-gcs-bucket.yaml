@@ -1,0 +1,42 @@
+---
+- name: Automate Terraform to create GCS bucket
+  hosts: all
+  become: false
+  vars:
+    terraform_directory: "/root/tf-gcs-bucket"
+    bucket_name: "{{ bucket_name | default('cfx-gcsdemo-bucket1') }}"  # Default bucket name
+    project_id: "{{ project_id | default('fourth-case-355607') }}"  # Default project ID
+    region: "{{ region | default('us-central1') }}"  # Default region
+
+  tasks:
+    - name: Ensure Terraform directory exists
+      ansible.builtin.file:
+        path: "{{ terraform_directory }}"
+        state: directory
+        mode: '0755'
+
+    - name: Run Terraform Init
+      ansible.builtin.command:
+        cmd: terraform init
+        chdir: "{{ terraform_directory }}"
+
+    - name: Run Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform plan -var="bucket_name={{ bucket_name }}" -var="project_id={{ project_id }}" -var="region={{ region }}"
+        chdir: "{{ terraform_directory }}"
+
+    - name: Apply Terraform Plan
+      ansible.builtin.command:
+        cmd: terraform apply -auto-approve -var="bucket_name={{ bucket_name }}" -var="project_id={{ project_id }}" -var="region={{ region }}"
+        chdir: "{{ terraform_directory }}"
+
+    - name: Display Terraform Output
+      ansible.builtin.command:
+        cmd: terraform output
+        chdir: "{{ terraform_directory }}"
+      register: terraform_output
+
+    - name: Show Terraform Output
+      debug:
+        msg: "{{ terraform_output.stdout_lines }}"
+
